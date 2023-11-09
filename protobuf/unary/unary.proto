@@ -3,7 +3,7 @@ syntax = "proto3";
 package unary;
 
 service unary {
-    rpc request(Request) returns (Response) {}  // 双向非流
+    rpc request(Request) returns (Response) {}
 }
 
 message Request {

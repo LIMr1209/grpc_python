@@ -3,7 +3,7 @@ syntax = "proto3";
 package server_stream;
 
 service server_stream {
-    rpc request(Request) returns(stream Response) {}  // 客户端接收流
+    rpc request(Request) returns(stream Response) {}
 }
 
 

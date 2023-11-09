@@ -1,4 +1,4 @@
-# python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. protobuf/unary/unary.proto
+# python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. protobuf/client_stream/client_stream.proto
 
 import time
 import grpc
@@ -28,8 +28,7 @@ def run():
     grpc_server.start()
 
     try:
-        while 1:
-            time.sleep(3600)
+        grpc_server.wait_for_termination()
     except KeyboardInterrupt:
         grpc_server.stop(0)
 

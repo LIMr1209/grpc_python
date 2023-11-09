@@ -28,8 +28,7 @@ def run():
     grpc_server.start()
 
     try:
-        while 1:
-            time.sleep(3600)
+        grpc_server.wait_for_termination()
     except KeyboardInterrupt:
         grpc_server.stop(0)
 

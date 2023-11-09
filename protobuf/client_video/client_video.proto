@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-package client_stream;
+package client_video;
 
-service client_stream {
+service client_video {
     rpc request(stream Request) returns(Response) {}
 }
 
 
 message Request {
-    string data = 1;
+    bytes data = 1;
 }
 
 message Response {
