@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package client_stream;
+
+service client_stream {
+    rpc request(stream Request) returns(Response) {}  // 客户端接收流
+}
+
+
+message Request {
+    string data = 1;
+}
+
+message Response {
+    string result = 1;
+}
