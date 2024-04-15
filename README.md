@@ -35,10 +35,30 @@
   - 最小连接：记录每个应用服务实例当前已产生多少连接，每次使用最小已连接的实例做为本次的连接
   - 权重方式：配置应用服务实例在整体服务中所占的使用比例上限，每次连接后计算更新已连接的占比
 ### [etcd](https://github.com/etcd-io/etcd)
+### `nginx` 也可以做 负载均衡 `grpc_pass` 
 
 ## 并发
-- 一个gRPC通道最多可以处理100个并发请求。
+- 多线程IO密集并发 `futures.ThreadPoolExecutor(max_workers=100)`
+- 多进程计算密集并发 1. 使用多进程启动多个端口设置负载均衡 2. 使用多进程启动服务设置同一端口(gprc.so_reuseport 可以绑定同一个端口， 内部设置负载均衡)
 
 ## 异常处理
+- 客户端
+```python
+try:
+    pass
+except grpc.RpcError as e:
+    if e.code() == grpc.StatusCode.UNAVAILABLE:
+        print("Check your network connection.")
+    else:
+        print(f"RPC failed: {e.code()} - {e.details()}")
+```
+- 服务端
+```python
+try:
+    pass
+except Exception as e:
+    context.set_code(grpc.StatusCode.INTERNAL)
+    context.set_details(str(e))
+    return pb2.Response()
+```
 ## 超时处理(客户端和服务端)
-## 负载均衡方案（客户端）

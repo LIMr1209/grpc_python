@@ -19,8 +19,10 @@ class Bili(pb2_grpc.unaryServicer):
 
 
 def run():
+    # options = (('gprc.so_reuseport', 1),)
     grpc_server = grpc.server(
-        futures.ThreadPoolExecutor(max_workers=1),  # 并发连接数
+        futures.ThreadPoolExecutor(max_workers=10),  # 线程并发 适合IO
+        # options=options
     )
     pb2_grpc.add_unaryServicer_to_server(Bili(), grpc_server)
     grpc_server.add_insecure_port('0.0.0.0:5000')

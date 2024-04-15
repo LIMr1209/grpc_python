@@ -2,16 +2,22 @@
 
 import asyncio
 import time
+import signal
 
 import grpc
 
 from protobuf.async_call import async_pb2, async_pb2_grpc
 
+num = 0
+
 
 class AsyncStreamServer(async_pb2_grpc.StreamRpcServicer):
     # 一元调用
     async def GetServerResult(self, request, context):
-        print("GetServerResult 服务器接收到的数据是： ", request.data)
+        global num
+        num += 1
+        print(f"请求次数 {num} GetServerResult 服务器接收到的数据是： ", request.data)
+        await asyncio.sleep(5)
         return async_pb2.Reply(result="hell tnan")
 
     # 服务器发送流式数据给客户端
@@ -57,7 +63,17 @@ async def main():
     g.add_insecure_port("0.0.0.0:8659")
     async_pb2_grpc.add_StreamRpcServicer_to_server(AsyncStreamServer(), g)
     await g.start()
+    # 注册信号处理程序
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        asyncio.get_event_loop().add_signal_handler(sig, lambda signal=sig: asyncio.create_task(shutdown(sig, g)))
+
     await g.wait_for_termination()
+
+
+async def shutdown(signal, g):
+    print(f"Received signal {signal}, shutting down gracefully...")
+    await g.stop(5)  # 设置超时时间
+    print("stopp rpc server")
 
 
 if __name__ == '__main__':

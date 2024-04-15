@@ -81,9 +81,13 @@ class ClientStream:
 
 async def main():
     client_stream = ClientStream()
-    await client_stream.ClientSendStream()
+    await client_stream.GetServerResult()
+
+async def mu_main():
+    tasks = [main() for x in range(5000)]
+    await asyncio.gather(*tasks)
 
 
 if __name__ == '__main__':
-    client_stream = ClientStream()
     asyncio.run(main())
+    # asyncio.run(mu_main())
